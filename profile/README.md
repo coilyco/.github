@@ -1,7 +1,7 @@
 # coilyco-gaming
 
 Games, simulations, mods, and the tooling that keeps a game server and its
-community running. By [Kai Siren](https://coilysiren.me).
+community running. By [Kai Ase Siren](https://coilysiren.me).
 
 Most of this orbits [Eco](https://play.eco/) and the Sirens server, which is a
 real multiplayer world with real players, so the tooling here answers questions
