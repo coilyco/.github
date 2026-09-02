@@ -5,8 +5,6 @@ for `coilyco-bridge`.
 
 * [`profile/README.md`](profile/README.md) - the organization landing page shown
   on GitHub.
-* [`.github/CODEOWNERS`](.github/CODEOWNERS) - GitHub review ownership.
-* [`.forgejo/CODEOWNERS`](.forgejo/CODEOWNERS) - Forgejo review ownership.
 
 Canonical development happens on
 [Forgejo](https://forgejo.coilysiren.me/coilyco-bridge/.github).
