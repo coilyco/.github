@@ -12,16 +12,16 @@ call.
   the composed bundle is plain files you can read and diff before a run, and it
   grants no credential, mount, or command. Installs as `acompose`, and Claude
   Code, Codex, Goose, and OpenCode take the same one.
-- **[housecast](https://forgejo.coilysiren.me/coilyco-flight-deck/housecast)** -
+- **[housecast](https://github.com/coilyco-flight-deck/housecast)** -
   a YAML driven roster framework for agent context. One roster declares the
   roles, personalities, and boundaries, the engine emits an immutable bundle,
   and the behavior evals run against that same bundle, so the graded artifact
   and the shipped artifact are identical. `acompose` renders what housecast
-  emits. On Forgejo only for now.
+  emits.
 - **[umbra](https://github.com/coilyco-flight-deck/umbra)** - a config driven
   occlusion framework. Declare what a tool may run, and arguments are validated
   before the process starts, each verb needs its own scope token, and every
-  call lands in an append-only audit log. Its `specgen` driver builds the whole
+  call lands in an append-only audit log. The `umbra` driver builds the whole
   guarded CLI from that declaration, so there is no hand-written boundary code
   to get wrong.
 - **[mcp-beaver](https://github.com/coilyco-flight-deck/mcp-beaver)** - a MCP
@@ -36,7 +36,7 @@ community harness built on this stack, lives over in
 
 ## Install
 
-`agent-compose`, `specgen`, and `aos` install from a Forgejo-hosted tap or
+`agent-compose`, `umbra`, and `aos` install from a Forgejo-hosted tap or
 bucket, so the URL is spelled out once.
 
 ```sh
@@ -76,8 +76,6 @@ refuses to do.
 - [agent-proxy](https://github.com/coilyco-flight-deck/agent-proxy) -
   observability and trajectory data plane for agent work. In active transition,
   so its interfaces are unstable.
-- [website](https://github.com/coilyco-flight-deck/website) - the source for
-  coilysiren.me, the personal site and technical blog.
 - [homebrew-tap](https://github.com/coilyco-flight-deck/homebrew-tap) and
   [scoop-bucket](https://github.com/coilyco-flight-deck/scoop-bucket) - the
   distribution channels, bumped by each upstream release.
