@@ -4,7 +4,7 @@ ward:
 ---
 # Agent instructions
 
-This repository owns the `coilyco-flight-deck` organization profile.
+This repository owns the `coilyco` organization profile.
 
 ## Boundaries
 
@@ -26,13 +26,13 @@ switching tasks, or ending a session. The remote is the only durable artifact.
 
 ## Scope
 
-The public organization profile for `coilyco-flight-deck`. Nothing else
-belongs here.
+The public organization profile for `coilyco`, plus the Sirens Discord banner
+folded in from `coilyco-gaming/.github`. Nothing else belongs here.
 
 ## Project shape
 
-`profile/README.md` is the landing page both forges render, and it is the only
-published artifact in the tree.
+`profile/README.md` is the landing page both forges render. `assets/` holds the
+Sirens Discord banner, with provenance in `docs/sirens-discord-banner.md`.
 
 ## Repo boundaries
 
