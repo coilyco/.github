@@ -1,7 +1,9 @@
 # Features
 
-* **Organization profile** - publishes the `coilyco-flight-deck` landing page
+* **Organization profile** - publishes the `coilyco` landing page
   from `profile/README.md`.
+* **Sirens Discord banner** - the community server banner in `assets/`, with
+  its provenance in [sirens-discord-banner.md](sirens-discord-banner.md).
 
 ## See also
 
