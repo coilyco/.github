@@ -11,6 +11,8 @@ repository use an action stored in a private one. This repository stays public.
 * `app-token` - mints a short-lived coilyco-ops App token for release trains. It takes the App id
   and the base64 key as inputs and masks the decoded key.
 * `tag-bump`, `create-release`, `upload-release-asset` - the release trains, sharing `_lib/release.sh`.
+* `fetch-release` - downloads private release assets with a read-only App token, see
+  [fetch-release.md](fetch-release.md).
 
 ## Hook fetch auth
 
