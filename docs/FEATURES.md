@@ -4,6 +4,9 @@
   from `profile/README.md`.
 * **Sirens Discord banner** - the community server banner in `assets/`, with
   its provenance in [sirens-discord-banner.md](sirens-discord-banner.md).
+* **Shared CI actions** - the public `setup-ci`, `app-token` and release actions every
+  workflow uses, including the authenticated agentic-os hook fetch, described in
+  [actions.md](actions.md).
 
 ## See also
 

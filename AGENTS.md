@@ -26,18 +26,21 @@ switching tasks, or ending a session. The remote is the only durable artifact.
 
 ## Scope
 
-The public organization profile for `coilyco`, plus the Sirens Discord banner
-folded in from `coilyco-gaming/.github`. Nothing else belongs here.
+The public organization profile for `coilyco`, the Sirens Discord banner
+folded in from `coilyco-gaming/.github`, and the shared CI actions under
+`actions/` (COI-3360), which must stay public so public repositories can use them.
+Nothing else belongs here.
 
 ## Project shape
 
 `profile/README.md` is the landing page both forges render. `assets/` holds the
 Sirens Discord banner, with provenance in `docs/sirens-discord-banner.md`.
+`actions/` holds the composite CI actions, described in `docs/actions.md`.
 
 ## Repo boundaries
 
-Organization presentation only. Project work belongs in the repository that
-owns it.
+Organization presentation and shared CI actions only. Project work belongs in the
+repository that owns it.
 
 ## Commands
 
