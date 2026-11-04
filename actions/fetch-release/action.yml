@@ -1,0 +1,64 @@
+# Download private release assets with a read-only App token. See docs/fetch-release.md.
+name: fetch-release
+description: Mint a short-lived read-only token for one private repository of the owner, and download named release assets checked against SHA256SUMS.
+inputs:
+  app_id:
+    description: "The read-only App id secret for the repository being read."
+    required: true
+  private_key_base64:
+    description: "The base64 App key secret for that App."
+    required: true
+  repo:
+    description: "Name of the private repository that holds the release, in the running repository's owner."
+    required: false
+    default: treehouse-servers
+  tag:
+    description: "Release tag, for example agent-compose-v2.220.0."
+    required: true
+  assets:
+    description: "Space separated asset names to download."
+    required: true
+  dest:
+    description: "Directory the assets are written to."
+    required: false
+    default: ${{ runner.temp }}/release
+  sums:
+    description: "Name of the SHA256SUMS asset every other asset is checked against. Empty skips the check."
+    required: false
+    default: SHA256SUMS
+outputs:
+  token:
+    description: "The installation token, masked in logs and revoked when the job ends. For a docker build secret."
+    value: ${{ steps.mint.outputs.token }}
+  dest:
+    description: "Directory holding the downloaded assets."
+    value: ${{ inputs.dest }}
+runs:
+  using: composite
+  steps:
+    - name: Decode the App key
+      id: key
+      shell: bash
+      env:
+        APP_KEY_BASE64: ${{ inputs.private_key_base64 }}
+      run: bash "${{ github.action_path }}/../app-token/decode-key.sh"
+    - name: Mint a read-only token for the release repository
+      id: mint
+      uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+      with:
+        app-id: ${{ inputs.app_id }}
+        private-key: ${{ steps.key.outputs.pem }}
+        owner: ${{ github.repository_owner }}
+        repositories: ${{ inputs.repo }}
+        permission-contents: read
+        permission-metadata: read
+    - name: Download the release assets
+      shell: bash
+      env:
+        FETCH_TOKEN: ${{ steps.mint.outputs.token }}
+        FETCH_REPO: ${{ github.repository_owner }}/${{ inputs.repo }}
+        FETCH_TAG: ${{ inputs.tag }}
+        FETCH_ASSETS: ${{ inputs.assets }}
+        FETCH_DEST: ${{ inputs.dest }}
+        FETCH_SUMS: ${{ inputs.sums }}
+      run: bash "${{ github.action_path }}/fetch.sh"
