@@ -1,0 +1,29 @@
+# The org ruleset's required check (COI-3297): a job named `gate`, on PRs and main pushes.
+# It runs this repo's pre-commit hooks. Hosted runner, no secrets, so Dependabot runs it.
+name: gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: coilyco/agentic-os/actions/setup-ci@df1aee7cf7fd1c36c1eda3523291a76b0cdbbd35
+        with:
+          tools: uv pre-commit trufflehog
+      - run: pre-commit run --all-files
