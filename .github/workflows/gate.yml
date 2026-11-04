@@ -1,5 +1,5 @@
-# The org ruleset's required check (COI-3297): a job named `gate`, on PRs and main pushes.
-# It runs this repo's pre-commit hooks. Hosted runner, no secrets, so Dependabot runs it.
+# The org ruleset's required check (COI-3297). The App secrets let pre-commit fetch
+# the private agentic-os hooks, see docs/actions.md.
 name: gate
 
 on:
@@ -23,7 +23,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: coilyco/agentic-os/actions/setup-ci@df1aee7cf7fd1c36c1eda3523291a76b0cdbbd35
+      - uses: ./actions/setup-ci
         with:
           tools: uv pre-commit trufflehog
+          app_id: ${{ secrets.COILYCO_OPS_APP_ID }}
+          private_key_base64: ${{ secrets.COILYCO_OPS_APP_PRIVATE_KEY_BASE64 }}
       - run: pre-commit run --all-files

@@ -1,0 +1,75 @@
+name: "Semver tag bump"
+description: |
+  Bump the latest semver tag by a fixed amount (minor by default) and
+  create the new tag on the repo, or run in compute-only mode so a workflow
+  can verify an image before the public tag exists. Does NOT parse commit
+  messages: every automated release is a minor bump, and major is
+  hand-driven only (pass bump: major, e.g. from a workflow_dispatch).
+  Nothing in commit history can escalate the bump. Creates the tag through the
+  GitHub git refs API. A tag made with GITHUB_TOKEN starts no workflow, so pass
+  a GitHub App token as `token` when a tag-triggered workflow must run.
+  Contract: docs/actions.md.
+
+inputs:
+  token:
+    description: "API token. Defaults to the job token. Pass a GitHub App token when a tag, release or push must start downstream workflows, since GITHUB_TOKEN events start none, or when the target repo is not the running one."
+    required: false
+    default: ${{ github.token }}
+  api_url:
+    description: "API base URL override, for tests and other servers. Default https://api.github.com."
+    required: false
+    default: ""
+  repo:
+    description: "owner/name."
+    required: false
+    default: ${{ github.repository }}
+  bump:
+    description: "Bump to apply (minor|major|patch|none). Default minor. Major is hand-driven only - commit history never escalates it."
+    required: false
+    default: "minor"
+  create_tag:
+    description: "Create the tag when true. Set false to only compute the next release tag/version."
+    required: false
+    default: "true"
+  tag_name:
+    description: "Explicit tag to create. When set, semver lookup is skipped and this tag is used directly."
+    required: false
+    default: ""
+  tag_prefix:
+    description: "Tag prefix. Tags are <prefix><semver>."
+    required: false
+    default: "v"
+  release_sha:
+    description: "Commit SHA the new tag should point at."
+    required: false
+    default: ${{ github.sha }}
+
+outputs:
+  new_tag:
+    description: "Computed tag, empty when no bump happened."
+    value: ${{ steps.compute.outputs.new_tag }}
+  new_version:
+    description: "Computed semver, empty when no bump happened."
+    value: ${{ steps.compute.outputs.new_version }}
+  previous_tag:
+    description: "Tag the bump is relative to."
+    value: ${{ steps.compute.outputs.previous_tag }}
+  changelog:
+    description: "Markdown changelog of the commits included in the bump: the newest 100, then a count of the older ones."
+    value: ${{ steps.compute.outputs.changelog }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: compute
+      shell: bash
+      env:
+        RELEASE_TOKEN_INPUT: ${{ inputs.token }}
+        RELEASE_API_URL: ${{ inputs.api_url }}
+        REPO: ${{ inputs.repo }}
+        BUMP: ${{ inputs.bump }}
+        CREATE_TAG: ${{ inputs.create_tag }}
+        TAG_NAME: ${{ inputs.tag_name }}
+        TAG_PREFIX: ${{ inputs.tag_prefix }}
+        RELEASE_SHA: ${{ inputs.release_sha }}
+      run: bash "${GITHUB_ACTION_PATH}/run.sh"

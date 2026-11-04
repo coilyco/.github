@@ -1,0 +1,55 @@
+# Fleet tools plus the authenticated agentic-os hook fetch. See docs/actions.md.
+name: setup-ci
+description: Install pinned fleet tools onto a GitHub-hosted Ubuntu runner, and authenticate the agentic-os hook fetch with a short-lived coilyco-ops App token.
+inputs:
+  tools:
+    description: Space separated tools to install.
+    default: just uv pre-commit
+  app_id:
+    description: "The App id, secret COILYCO_OPS_APP_ID. Empty skips the hook auth with a warning, which is what a fork pull request gets."
+    required: false
+    default: ""
+  private_key_base64:
+    description: "The base64 App key, secret COILYCO_OPS_APP_PRIVATE_KEY_BASE64."
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Install fleet tools
+      shell: bash
+      env:
+        TOOLS: ${{ inputs.tools }}
+        INSTALL_DIR: ${{ runner.temp }}/fleet-bin
+      run: bash "${{ github.action_path }}/install.sh"
+    - name: Put the tools on PATH
+      shell: bash
+      run: echo "${{ runner.temp }}/fleet-bin" >> "$GITHUB_PATH"
+    - name: Warn when the hook fetch has no credential
+      if: ${{ inputs.app_id == '' || inputs.private_key_base64 == '' }}
+      shell: bash
+      run: echo "::warning::no App credential, so pre-commit fetches the agentic-os hooks anonymously and fails once that repo is private"
+    - name: Decode the App key
+      id: key
+      if: ${{ inputs.app_id != '' && inputs.private_key_base64 != '' }}
+      shell: bash
+      env:
+        APP_KEY_BASE64: ${{ inputs.private_key_base64 }}
+      run: bash "${{ github.action_path }}/../app-token/decode-key.sh"
+    - name: Mint a read-only agentic-os token
+      id: mint
+      if: ${{ steps.key.outcome == 'success' }}
+      uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+      with:
+        app-id: ${{ inputs.app_id }}
+        private-key: ${{ steps.key.outputs.pem }}
+        owner: coilyco
+        repositories: agentic-os
+        permission-contents: read
+        permission-metadata: read
+    - name: Send the token with every agentic-os git fetch
+      if: ${{ steps.mint.outcome == 'success' }}
+      shell: bash
+      env:
+        AOS_FETCH_TOKEN: ${{ steps.mint.outputs.token }}
+      run: bash "${{ github.action_path }}/hooks-auth.sh"
