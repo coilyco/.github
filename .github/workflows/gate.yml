@@ -26,6 +26,6 @@ jobs:
       - uses: ./actions/setup-ci
         with:
           tools: uv pre-commit trufflehog
-          app_id: ${{ secrets.COILYCO_OPS_APP_ID }}
-          private_key_base64: ${{ secrets.COILYCO_OPS_APP_PRIVATE_KEY_BASE64 }}
+          app_id: ${{ secrets.COILYCO_HOOKS_APP_ID }}
+          private_key_base64: ${{ secrets.COILYCO_HOOKS_APP_PRIVATE_KEY_BASE64 }}
       - run: pre-commit run --all-files
